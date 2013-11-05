@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+</body>
+<script type="text/javascript" src="../libs/three.min.js"></script>
+<script type="text/javascript" src="TrackballControls.js"></script>
+<script type="text/javascript">
+
+var WIDTH  = 600,
+HEIGHT = 400,
+renderer, scene, camera, cube, light,controls;
+
+function init(){
+//显示器
+renderer = new THREE.WebGLRenderer({
+antialias: true
+});
+renderer.setSize(WIDTH, HEIGHT);
+document.body.appendChild(renderer.domElement);
+
+//场景
+scene = new THREE.Scene();
+
+//视角
+camera = new THREE.PerspectiveCamera(35,WIDTH/HEIGHT,0.1,500);
+camera.position.set( 11, 11, 25);
+camera.lookAt(scene.position);
+
+controls = new THREE.TrackballControls(camera);
+controls.rotateSpeed = 5.0;
+controls.zoomSpeed = 5;
+controls.panSpeed = 2;
+controls.noZoom = false;
+controls.noPan = false;
+controls.staticMoving = true;
+controls.dynamicDampingFactor = 0.3;
+
+scene.add(camera);
+
+
+
+//scene.add(new THREE.Mesh( new Cube( 100, 100,100 ), [ new THREE.MeshBasicMaterial( { color: 0xff0000 } ), new THREE.MeshBasicMaterial( { color: 0x000000, wireframe: true, wireframe_linewidth: 10 } ) ] ));
+
+
+
+
+//添加灯光
+scene.add( new THREE.AmbientLight( 0xffffff ) );
+
+}
+
+var addCube = function(){
+	
+
+	
+	var height = 5;
+	var points = [];
+	var geom = new THREE.Geometry();	
+
+	
+	var str = "-1.339068825910931,0.471862348178138 -0.828947368421052,0.565384615384615 0.097773279352227,0.187044534412955 0.590890688259109,0.454858299595142 0.144534412955466,-0.365587044534413 0.208299595141701,-0.833198380566802 -0.539878542510121,-0.837449392712551 -1.305060728744939,-0.845951417004049 -1.853441295546559,-0.408097165991903 -1.810931174089069,-0.097773279352227 -1.606882591093117,-0.063765182186235 -1.479352226720648,-0.510121457489879 -1.271052631578947,-0.718421052631579 -1.045748987854251,-0.782186234817814 -0.765182186234818,-0.718421052631579 -0.267813765182186,-0.684412955465587 -0.034008097165992,-0.731174089068826 0.004251012145749,-0.493117408906883 0.008502024291498,-0.395344129554656 0.225303643724696,-0.038259109311741 0.331578947368421,0.114777327935223 -0.199797570850202,-0.119028340080972 -0.178542510121457,0.114777327935223 -0.718421052631579,0.280566801619433 -0.981983805668016,0.314574898785425 -1.186032388663967,0.08502024291498 -1.041497975708502,-0.123279352226721 -0.892712550607287,-0.323076923076923 -1.024493927125506,-0.510121457489879 -1.126518218623482,-0.539878542510122 -1.356072874493927,-0.238056680161943 -1.445344129554656,0.04251012145749 -1.419838056680162,0.102024291497976 -1.534615384615385,0.310323886639676 -1.670647773279352,0.425101214574899 -1.759919028340081,0.675910931174089 -1.581376518218623,0.807692307692307 -1.483603238866397,0.824696356275304 -1.47085020242915,0.650404858299595 -1.59412955465587,0.612145748987854 -1.589878542510121,0.54412955465587 -1.487854251012146,0.433603238866397 -1.381578947368421,0.582388663967611 -1.292307692307692,0.658906882591093 -1.339068825910931,0.471862348178138";
+	var str = "-21.468378927699199,9.413652125096302 -22.093349997541353,-9.562742177383669 32.847288596764429,-10.926315420675643 33.244997459391257,9.186389917880973 29.551986592142161,9.015943262469477 30.858744283630305,-9.676373280991333 1.314657345637535,-8.596877796718522 21.200100476978822,3.561650289301582 -6.639519906898979,-3.824371445196611 5.746270386336452,13.845265165795219 -10.957501843990231,-0.47225388877051 -11.412026258420889,10.379516505761451 -16.241348161746629,3.050310323067091 -9.025773082659935,-5.52883799931158 -17.661736956842436,-7.006042346211218 -16.923134783392619,-2.801691512727631 -21.468378927699199,9.413652125096302";
+	var str = "-54.535030077529569,12.368060818895575 -51.580621383730289,12.14079861168025 -51.807883590945622,-8.767324452130019 -35.445004671441936,-9.790004384598998 -34.308693635365287,11.3453808864266 -30.558867216312361,11.231749782818934 -31.695178252389006,-12.176257560359954 -54.875923388352561,-11.267208731498638 -54.535030077529569,12.368060818895575";
+	var str_arr = str.split(" ");
+	
+	for(var i=0;i<str_arr.length;i++){
+		var str2 = str_arr[i]+"";
+		var str_arr_2 = str2.split(",");
+		
+		var n1 = str_arr_2[0].substring(0,5);
+		var n2 = str_arr_2[1].substring(0,5);
+		console.debug(n1+" "+n2);
+		points.push([n1,n2,0]);
+		geom.vertices.push(new THREE.Vector3( n1,n2,0));
+	}
+
+	for(var i=0;i<points.length;i++){
+		geom.vertices.push(new THREE.Vector3( points[i][0],points[i][1],points[i][2]+height));
+	}
+	
+	for(var i=0;i<points.length;i++){
+		var j=i;
+		if(i==points.length-1){
+			geom.faces.push(new THREE.Face3(j,j+points.length,0));
+			geom.faces.push(new THREE.Face3(points.length,j+points.length,0));
+		}
+		else{
+			geom.faces.push(new THREE.Face3(j,j+points.length,j+1));
+			geom.faces.push(new THREE.Face3(j+points.length+1,j+points.length,j+1));
+		}
+	}
+	
+	var triangleMaterial = new THREE.MeshBasicMaterial({  
+	  color: 0x000000, wireframe: true, wireframe_linewidth: 20
+	});
+
+	var triangleMaterial2 = new THREE.MeshBasicMaterial({
+	  color:0xFFFFFF
+	  ,side:THREE.DoubleSide
+	});
+
+	var triangleMesh = new THREE.Mesh(geom, triangleMaterial);
+	//var triangleMesh2 = new THREE.Mesh(geom, triangleMaterial2);
+	//triangleMesh.position.set(-1.5, 0.0, 4.0);
+	
+	scene.add(triangleMesh);
+	//scene.add(triangleMesh2);
+}
+
+var addXYZlines = function(){
+	var arrow_material = [
+    	new THREE.LineBasicMaterial({ color: 0xff0000 }),
+    	new THREE.LineBasicMaterial({ color: 0x00ff00 }),
+    	new THREE.LineBasicMaterial({ color: 0x0000ff })
+    ];
+    var arrow_geometry = [
+    	new THREE.Geometry(),
+    	new THREE.Geometry(),
+    	new THREE.Geometry()
+    ];
+    arrow_geometry[0].vertices = [new THREE.Vertex(new THREE.Vector3(0, 0, 0)), new THREE.Vertex(new THREE.Vector3(150, 0, 0))];
+    arrow_geometry[1].vertices = [new THREE.Vertex(new THREE.Vector3(0, 0, 0)), new THREE.Vertex(new THREE.Vector3(0, 150, 0))];
+    arrow_geometry[2].vertices = [new THREE.Vertex(new THREE.Vector3(0, 0, 0)), new THREE.Vertex(new THREE.Vector3(0, 0, 150))];
+
+    var arrow_line = [
+    	new THREE.Line(arrow_geometry[0], arrow_material[0]),
+    	new THREE.Line(arrow_geometry[1], arrow_material[1]),
+    	new THREE.Line(arrow_geometry[2], arrow_material[2])
+    ];
+    scene.add(arrow_line[0]);
+    scene.add(arrow_line[1]);
+    scene.add(arrow_line[2]);
+}
+
+
+//设置光源
+function initLight(){
+	//设置环境光
+	var ambient = new THREE.AmbientLight(0x221100);
+	//追加光源到场景
+	scene.add(ambient);
+	//设置平行光源
+	var Light1 = new THREE.DirectionalLight(0xffeedd);
+	var Light2 = new THREE.DirectionalLight(0xffeedd);
+	//光源向量，即光源的位置
+	Light1.position.set(50,50,50);
+	Light2.position.set(50,0,0);
+	//追加光源到场景
+	scene.add(Light1);
+	scene.add(Light2);
+}
+
+
+function animate(){
+	requestAnimationFrame( animate );
+	controls.update();
+	renderer.render(scene, camera);
+}
+
+init();
+initLight();
+//addXYZlines();
+addCube();
+animate();
+</script>
+</html>
