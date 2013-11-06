@@ -63,8 +63,7 @@ function init(){
 	scene.add( group );
 	
 	
-	//Ìí¼ÓµÆ¹â
-	scene.add( new THREE.AmbientLight( 0xffffff ) );
+
 	renderer = new THREE.WebGLRenderer( { antialias: true } );
 	renderer.setSize( window.innerWidth, window.innerHeight );
 
@@ -99,7 +98,7 @@ var addGeom = function(){
 
 	var californiaShape = new THREE.Shape( californiaPts );
 	
-	var extrudeSettings = { amount: 20 }; // bevelSegments: 2, steps: 2 , bevelSegments: 5, bevelSize: 8, bevelThickness:5
+	var extrudeSettings = { amount: 120,bevelSegments:0 }; // bevelSegments: 2, steps: 2 , bevelSegments: 5, bevelSize: 8, bevelThickness:5
 
 	// addShape( shape, color, x, y, z, rx, ry,rz, s );
 
@@ -120,7 +119,7 @@ function addShape( shape, extrudeSettings, color, x, y, z, rx, ry, rz, s ) {
 	mesh.rotation.set( rx, ry, rz );
 	mesh.scale.set( s, s, s );
 	group.add( mesh );
-
+	
 	// 3d shape
 
 	var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
@@ -137,7 +136,7 @@ function addShape( shape, extrudeSettings, color, x, y, z, rx, ry, rz, s ) {
 	line.position.set( x, y, z + 25 );
 	line.rotation.set( rx, ry, rz );
 	line.scale.set( s, s, s );
-	group.add( line );
+	//group.add( line );
 
 	// transparent line from real points
 
@@ -145,7 +144,7 @@ function addShape( shape, extrudeSettings, color, x, y, z, rx, ry, rz, s ) {
 	line.position.set( x, y, z + 75 );
 	line.rotation.set( rx, ry, rz );
 	line.scale.set( s, s, s );
-	group.add( line );
+	//group.add( line );
 
 	// vertices from real points
 /*
@@ -163,7 +162,7 @@ function addShape( shape, extrudeSettings, color, x, y, z, rx, ry, rz, s ) {
 	line.position.set( x, y, z + 125 );
 	line.rotation.set( rx, ry, rz );
 	line.scale.set( s, s, s );
-	group.add( line );
+	//group.add( line );
 
 	// equidistance sampled points
 /*
@@ -187,9 +186,9 @@ var addXYZlines = function(){
     	new THREE.Geometry(),
     	new THREE.Geometry()
     ];
-    arrow_geometry[0].vertices = [new THREE.Vertex(new THREE.Vector3(0, 0, 0)), new THREE.Vertex(new THREE.Vector3(150, 0, 0))];
-    arrow_geometry[1].vertices = [new THREE.Vertex(new THREE.Vector3(0, 0, 0)), new THREE.Vertex(new THREE.Vector3(0, 150, 0))];
-    arrow_geometry[2].vertices = [new THREE.Vertex(new THREE.Vector3(0, 0, 0)), new THREE.Vertex(new THREE.Vector3(0, 0, 150))];
+    arrow_geometry[0].vertices = [new THREE.Vertex(new THREE.Vector3(0, 0, 0)), new THREE.Vertex(new THREE.Vector3(15000, 0, 0))];
+    arrow_geometry[1].vertices = [new THREE.Vertex(new THREE.Vector3(0, 0, 0)), new THREE.Vertex(new THREE.Vector3(0, 15000, 0))];
+    arrow_geometry[2].vertices = [new THREE.Vertex(new THREE.Vector3(0, 0, 0)), new THREE.Vertex(new THREE.Vector3(0, 0, 15000))];
 
     var arrow_line = [
     	new THREE.Line(arrow_geometry[0], arrow_material[0]),
@@ -221,10 +220,11 @@ function render() {
 }
 
 init();
+addGeom();
 animate();
 
-//addXYZlines();
-addGeom();
+addXYZlines();
+
 
 </script>
 </html>

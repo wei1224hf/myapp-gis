@@ -1,0 +1,218 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+	<body>
+
+
+<script type="text/javascript" src="../libs/three.min.js"></script>
+<script type="text/javascript" src="TrackballControls.js"></script>
+
+		<script type="x-shader/x-vertex" id="vertexShader">
+
+			varying vec3 worldPosition;
+
+			void main() {
+
+				vec4 mPosition = modelMatrix * vec4( position, 1.0 );
+
+				gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+				worldPosition = mPosition.xyz;
+
+			}
+
+		</script>
+
+		<script type="x-shader/x-fragment" id="fragmentShader">
+
+			uniform vec3 topColor;
+			uniform vec3 bottomColor;
+			uniform float offset;
+			uniform float exponent;
+
+			varying vec3 worldPosition;
+
+			void main() {
+
+				float h = normalize( worldPosition + offset ).y;
+				gl_FragColor = vec4( mix( bottomColor, topColor, max( pow( h, exponent ), 0.0 ) ), 1.0 );
+
+			}
+
+		</script>
+
+		<script>
+
+			var container, stats;
+
+			var camera, scene, renderer;
+
+			var text, plane;
+
+			var targetRotation = 0;
+			var targetRotationOnMouseDown = 0;
+
+			var mouseX = 0;
+			var mouseXOnMouseDown = 0;
+
+			var windowHalfX = window.innerWidth / 2;
+			var windowHalfY = window.innerHeight / 2;
+			
+			var SCREEN_WIDTH = window.innerWidth;
+			var SCREEN_HEIGHT = window.innerHeight;
+
+			init();
+			animate();
+
+			function init() {
+
+				container = document.createElement( 'div' );
+				document.body.appendChild( container );
+
+
+				camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 1, 1000 );
+				camera.position.set( 0, 150, 500 );
+
+				scene = new THREE.Scene();
+				scene.fog = new THREE.Fog( 0xfafafa, 1000, 10000 );
+				scene.fog.color.setHSV( 0.6, 0.125, 1 );
+
+				var directionalLight = new THREE.DirectionalLight( 0xffffff, 1.475 );
+				directionalLight.position.set( 100, 100, -100 );
+				scene.add( directionalLight );
+
+
+				var hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 1.25 );
+				hemiLight.color.setHSV( 0.6, 0.45, 1 );
+				hemiLight.groundColor.setHSV( 0.1, 0.45, 0.95 );
+				hemiLight.position.y = 500;
+				scene.add( hemiLight );
+				
+				var vertexShader = document.getElementById( 'vertexShader' ).textContent;
+				var fragmentShader = document.getElementById( 'fragmentShader' ).textContent;
+				var uniforms = {
+					topColor: 	 { type: "c", value: new THREE.Color( 0x0077ff ) },
+					bottomColor: { type: "c", value: new THREE.Color( 0xffffff ) },
+					offset:		 { type: "f", value: 400 },
+					exponent:	 { type: "f", value: 0.6 }
+				}
+				uniforms.topColor.value.copy( hemiLight.color );
+
+				scene.fog.color.copy( uniforms.bottomColor.value );
+
+				var skyGeo = new THREE.SphereGeometry( 4000, 32, 15 );
+				var skyMat = new THREE.ShaderMaterial( { vertexShader: vertexShader, fragmentShader: fragmentShader, uniforms: uniforms, side: THREE.BackSide } );
+
+				var sky = new THREE.Mesh( skyGeo, skyMat );
+				scene.add( sky );
+
+				parent = new THREE.Object3D();
+				parent.position.y = 50;
+				scene.add( parent );
+				
+				controls = new THREE.TrackballControls(camera);
+				controls.rotateSpeed = 5.0;
+				controls.zoomSpeed = 5;
+				controls.panSpeed = 2;
+				controls.noZoom = false;
+				controls.noPan = false;
+				controls.staticMoving = true;
+				controls.dynamicDampingFactor = 0.3;
+
+				
+				var points = [
+				    [0,0],
+				    [100,0],
+				    [100,100],
+				    [0,100],
+				    [0,0],
+				              ];
+
+
+				// California
+
+				var threejsPoints = [];
+				for(var i=0;i<points.length;i++){
+					var item = points[i];
+					threejsPoints.push(new THREE.Vector2 ( item[0], item[1] ));
+				}
+				
+				var threejsShape = new THREE.Shape( threejsPoints );
+		
+
+
+				var extrudeSettings = { amount: 20,bevelSegments: 0 }; // bevelSegments: 2, steps: 2 , bevelSegments: 5, bevelSize: 8, bevelThickness:5
+
+				// addShape( shape, color, x, y, z, rx, ry,rz, s );
+
+				addShape( threejsShape, extrudeSettings, 0xffaa00, -300, -100, 0, 0, 0, 0, 0.25 );
+
+				
+				renderer = new THREE.WebGLRenderer( { antialias: true, alpha: false, clearColor: 0xfafafa, clearAlpha: 1 } );
+				renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
+				renderer.domElement.style.position = "relative";
+				container.appendChild( renderer.domElement );
+
+				renderer.setClearColor( scene.fog.color, 1 );
+
+				renderer.gammaInput = true;
+				renderer.gammaOutput = true;
+				renderer.physicallyBasedShading = true;
+
+				container.appendChild( renderer.domElement );
+
+
+			}
+
+			function addShape( shape, extrudeSettings, color, x, y, z, rx, ry, rz, s ) {
+
+				var points = shape.createPointsGeometry();
+				var spacedPoints = shape.createSpacedPointsGeometry( 100 );
+
+				// flat shape
+
+				var geometry = new THREE.ShapeGeometry( shape );
+
+				var mesh = THREE.SceneUtils.createMultiMaterialObject( geometry, [ new THREE.MeshLambertMaterial( { color: color } ), new THREE.MeshBasicMaterial( { color: 0x000000, wireframe: true, transparent: true } ) ] );
+				mesh.position.set( x, y, z - 125 );
+				mesh.rotation.set( rx, ry, rz );
+				mesh.scale.set( s, s, s );
+				parent.add( mesh );
+
+				// 3d shape
+
+				var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
+
+				var mesh = THREE.SceneUtils.createMultiMaterialObject( geometry, [ new THREE.MeshLambertMaterial( { color: color } ), new THREE.MeshBasicMaterial( { color: 0x000000, wireframe: true, transparent: true } ) ] );
+				mesh.position.set( x, y, z - 75 );
+				mesh.rotation.set( rx, ry, rz );
+				mesh.scale.set( s, s, s );
+				parent.add( mesh );
+
+				
+
+			}
+
+			//
+
+			function animate() {
+
+				requestAnimationFrame( animate );
+				controls.update();
+				render();
+
+
+
+			}
+
+			function render() {
+
+				parent.rotation.y += ( targetRotation - parent.rotation.y ) * 0.05;
+				renderer.render( scene, camera );
+
+			}
+
+		</script>
+
+	</body>
+</html>

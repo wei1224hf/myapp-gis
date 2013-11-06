@@ -89,13 +89,6 @@ var addCube = function(){
 	for(var i=0;i<points.length;i++){
 		geom.vertices.push(new THREE.Vector3( points[i][0],points[i][1],points[i][2]));
 	}
-	console.debug(geom)
-	/*
-	geom.vertices.push(new THREE.Vector3( 0,0,0));
-	geom.vertices.push(new THREE.Vector3( 0,5,0));
-	geom.vertices.push(new THREE.Vector3( 5,0,0));
-	*/
-	//geom.faces.push(new THREE.Face3(0, 1, 2));
 	
 	for(var i=0;i<faces.length;i++){
 		geom.faces.push(new THREE.Face3(faces[i][0],faces[i][1],faces[i][2]));
