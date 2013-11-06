@@ -177,12 +177,14 @@
 							var shape = new THREE.Shape( threejsPoints );
 							var extrudeSettings = { amount: 100, steps: 1 , bevelSegments: 0, bevelSize: 0, bevelThickness:0 }; // bevelSegments: 2, steps: 2 , bevelSegments: 5, bevelSize: 8, bevelThickness:5
 							var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
+							
 							var color = 0xFFFFFF;
 							var mesh = THREE.SceneUtils.createMultiMaterialObject( geometry, [ new THREE.MeshLambertMaterial( { color: color } ), new THREE.MeshBasicMaterial( { color: 0x000000, wireframe: true, transparent: true } ) ] );
 							mesh.position.set( 0, 0, 0 );
 							mesh.rotation.set( 0, 0, 0 );
 							mesh.scale.set( 1, 1, 1 );
 							parent.add( mesh );
+							
 			}		
 			
 			var addRoof = function(){
