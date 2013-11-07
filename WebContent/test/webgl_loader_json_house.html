@@ -83,15 +83,15 @@
 		container.appendChild( webglRenderer.domElement );
 
 		var loader = new THREE.JSONLoader();
-		loader.load( "mine.js", function ( geometry, materials ) { 
-			var color = 0xffffff;
+		loader.load( "house.js", function ( geometry, materials ) { 
+			var color = 0x555555;
 			var mesh = THREE.SceneUtils.createMultiMaterialObject( geometry, [ new THREE.MeshLambertMaterial( { color: color } ), new THREE.MeshBasicMaterial( { color: 0x000000, wireframe: true, transparent: true } ) ] );
 			mesh.position.set( 0, 0, 0 );
 			mesh.rotation.set( 0, 0, 0 );
 			mesh.scale.set( 100, 100, 100 );
 			scene.add(mesh);
 			
-			addXYZlines();
+			//addXYZlines();
 			animate();
 		} );
 

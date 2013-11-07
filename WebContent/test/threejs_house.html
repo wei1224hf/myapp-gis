@@ -146,6 +146,7 @@
 							var shape = new THREE.Shape( threejsPoints );
 							var extrudeSettings = { amount: 100, steps: 1 , bevelSegments: 0, bevelSize: 0, bevelThickness:0 }; // bevelSegments: 2, steps: 2 , bevelSegments: 5, bevelSize: 8, bevelThickness:5
 							var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
+							console.debug(saveGeometryToJSON(geometry));
 							var color = 0xFFFFFF;
 							var mesh = THREE.SceneUtils.createMultiMaterialObject( geometry, [ new THREE.MeshLambertMaterial( { color: color } ), new THREE.MeshBasicMaterial( { color: 0x000000, wireframe: true, transparent: true } ) ] );
 							mesh.position.set( 0, 0, 0 );
@@ -193,6 +194,7 @@
 							var shape = new THREE.Shape( threejsPoints );
 							var extrudeSettings = { amount: 102, steps: 1 , bevelSegments: 0, bevelSize: 0, bevelThickness:0 }; // bevelSegments: 2, steps: 2 , bevelSegments: 5, bevelSize: 8, bevelThickness:5
 							var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
+							console.debug(saveGeometryToJSON(geometry));
 							var color = 0x333333;
 							var mesh = THREE.SceneUtils.createMultiMaterialObject( geometry, [ new THREE.MeshLambertMaterial( { color: color } ), new THREE.MeshBasicMaterial( { color: 0x000000, wireframe: true, transparent: true } ) ] );
 							mesh.position.set( 0, 0, -1 );
@@ -289,6 +291,52 @@
 			    scene.add(arrow_line[0]);
 			    scene.add(arrow_line[1]);
 			    scene.add(arrow_line[2]);
+			}
+			
+			var saveGeometryToJSON = function (geometry) {
+			    var i,
+			        json = {
+			            metadata: { 
+			                formatVersion: 3
+			            },
+			            scale: 1.000000,
+			            materials: [],
+			            vertices: [],
+			            morphTargets: [],
+			            morphColors: [],
+			            normals: [],
+			            colors: [],
+			            uvs: [[]],                  
+			            faces: []
+			        };
+
+			    for (i = 0; i < geometry.vertices.length; i++) {
+			        json.vertices.push(geometry.vertices[i].x);
+			        json.vertices.push(geometry.vertices[i].y);
+			        json.vertices.push(geometry.vertices[i].z);
+			    }
+
+			    for (i = 0; i < geometry.faces.length; i++) {
+			        if (geometry.faces[i].d) {
+			            json.faces.push(1);
+			        } else {
+			            json.faces.push(0);                 
+			        }
+
+			        json.faces.push(geometry.faces[i].a);
+			        json.faces.push(geometry.faces[i].b);
+			        json.faces.push(geometry.faces[i].c);
+
+			        if (geometry.faces[i].d) {
+			            json.faces.push(geometry.faces[i].d);
+			        }
+
+			        json.normals.push(geometry.faces[i].normal.x);
+			        json.normals.push(geometry.faces[i].normal.y);
+			        json.normals.push(geometry.faces[i].normal.z);
+			    }
+
+			    return JSON.stringify(json);
 			}
 
 			init();
