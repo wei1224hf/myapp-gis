@@ -3,10 +3,9 @@
 
 	<body>
 
-<div onclick="show(1)">rooms</div>
-<div onclick="show(room_trash)">room_trash</div>
-<div onclick="show(room_desk)">room_desk</div>
-<div onclick="show(room_walls)">room_walls</div>
+<div onclick="addRoom()">addRoom</div>
+<div onclick="addFrontWindow()">addFrontWindow</div>
+<div onclick="addFloor()">addFloor</div>
 <script type="text/javascript" src="../libs/three.min.js"></script>
 <script type="text/javascript" src="TrackballControls.js"></script>
 
@@ -75,12 +74,12 @@
 			scene.add( geom_objects_rooms );			
 		}
 		
-		var addjson = function(){
+		var addRoom = function(){
 			var loader = new THREE.JSONLoader();
-			loader.load( "room_all_normals_outside.js", function ( geometry,materials,c ) { 
+			loader.load( "floor_room.js", function ( geometry,materials,c ) { 
 				room_trash = null;
 				
-				for(var i=0;i<9;i++){					
+				for(var i=0;i<6;i++){					
 					room_trash = geometry;
 					var met = new THREE.MeshFaceMaterial(materials)
 					var mesh = new THREE.Mesh(geometry, met);
@@ -88,18 +87,43 @@
 					mesh.rotation.set( 0, 0, 0 );
 					mesh.scale.set( 100, 100, 100 );
 					geom_objects_rooms.add(mesh);
-					
-					//var directionalLight = new THREE.DirectionalLight( 0xffffff );
-					//directionalLight.position.set( 4.2*i*100+2, 2, 2 ).normalize();
-					//scene.add( directionalLight );
 				}
 									
 			} );			
 		}
 		
-		var show = function(id){
-			THREE.SceneUtils.traverseHierarchy( geom_objects_rooms, function ( object ) { object.visible = false; } );
-		}
+		var addFrontWindow = function(){
+			var loader = new THREE.JSONLoader();
+			loader.load( "floor_front_window.js", function ( geometry,materials,c ) { 
+				room_trash = null;
+				
+				for(var i=0;i<6;i++){					
+					room_trash = geometry;
+					var met = new THREE.MeshFaceMaterial(materials)
+					var mesh = new THREE.Mesh(geometry, met);
+					mesh.position.set( 4.2*i*100, 0, 0 );
+					mesh.rotation.set( 0, 0, 0 );
+					mesh.scale.set( 100, 100, 100 );
+					geom_objects_rooms.add(mesh);
+				}
+									
+			} );			
+		}	
+		
+		var addFloor = function(){
+			var loader = new THREE.JSONLoader();
+			loader.load( "floor_bigfloor.js", function ( geometry,materials,c ) { 
+				var met = new THREE.MeshFaceMaterial(materials)
+				var mesh = new THREE.Mesh(geometry, met);
+				mesh.position.set( (4.2*7-2.1)*100, 0, 0 );
+				mesh.rotation.set( 0, 0, 0 );
+				mesh.scale.set( 100, 100, 100 );
+				geom_objects_rooms.add(mesh);
+
+									
+			} );			
+		}			
+		
 
 		function animate(){
 			requestAnimationFrame( animate );
@@ -133,7 +157,6 @@
 		}
 
 		init();
-		addjson();
 		addXYZlines();
 		animate();
 
