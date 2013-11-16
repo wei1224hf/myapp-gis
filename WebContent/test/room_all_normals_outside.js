@@ -23,14 +23,7 @@
 		"blending" : "NoBlending",
 		"colorAmbient" : [0.2937832399276381, 0.6400000190734865, 0.12785781812455976],
 		"colorDiffuse" : [0.2937832399276381, 0.6400000190734865, 0.12785781812455976],
-		"colorSpecular" : [0.5, 0.5, 0.5],
-		"depthTest" : true,
-		"depthWrite" : false,
-		"shading" : "Lambert",
-		"specularCoef" : 50,
-		"transparency" : 1.0,
-		"transparent" : false,
-		"vertexColors" : 0
+		"colorSpecular" : [0.5, 0.5, 0.5]
 	},
 
 	{
