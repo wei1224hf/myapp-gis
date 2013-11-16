@@ -6,6 +6,7 @@
 <div onclick="addRoom()">addRoom</div>
 <div onclick="addFrontWindow()">addFrontWindow</div>
 <div onclick="addFloor()">addFloor</div>
+<div onclick="addOtherFloor()">addOtherFloor</div>
 <script type="text/javascript" src="../libs/three.min.js"></script>
 <script type="text/javascript" src="TrackballControls.js"></script>
 
@@ -83,7 +84,7 @@
 					room_trash = geometry;
 					var met = new THREE.MeshFaceMaterial(materials)
 					var mesh = new THREE.Mesh(geometry, met);
-					mesh.position.set( 4.2*i*100, 0, 0 );
+					mesh.position.set( 4.2*i*100*(-1), 0, 0 );
 					mesh.rotation.set( 0, 0, 0 );
 					mesh.scale.set( 100, 100, 100 );
 					geom_objects_rooms.add(mesh);
@@ -101,7 +102,7 @@
 					room_trash = geometry;
 					var met = new THREE.MeshFaceMaterial(materials)
 					var mesh = new THREE.Mesh(geometry, met);
-					mesh.position.set( 4.2*i*100, 0, 0 );
+					mesh.position.set( 4.2*i*100*(-1), 0, 0 );
 					mesh.rotation.set( 0, 0, 0 );
 					mesh.scale.set( 100, 100, 100 );
 					geom_objects_rooms.add(mesh);
@@ -115,14 +116,22 @@
 			loader.load( "floor_bigfloor.js", function ( geometry,materials,c ) { 
 				var met = new THREE.MeshFaceMaterial(materials)
 				var mesh = new THREE.Mesh(geometry, met);
-				mesh.position.set( (4.2*7-2.1)*100, 0, 0 );
+				mesh.position.set( 0, 0, 0 );
 				mesh.rotation.set( 0, 0, 0 );
 				mesh.scale.set( 100, 100, 100 );
-				geom_objects_rooms.add(mesh);
-
-									
+				geom_objects_rooms.add(mesh);									
 			} );			
-		}			
+		}	
+		
+		var addOtherFloor = function(){
+			for(var i=1;i<3;i++){
+				var obj = geom_objects_rooms.clone();
+				console.debug(obj);
+				console.debug(geom_objects_rooms);
+				obj.position.set( 0,  i*100*3.4 ,0);
+				scene.add( obj );			
+			}
+		}		
 		
 
 		function animate(){
