@@ -87,36 +87,11 @@
 		var room_walls = null;
 		var addjson = function(){
 			var loader = new THREE.JSONLoader();
-			loader.load( "room_beds.js", function ( geometry,materials,c ) { 
+			loader.load( "room_all_normals_outside.js", function ( geometry,materials,c ) { 
 				room_trash = geometry;
-				var mesh = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
-				mesh.position.set( 0, 0, 0 );
-				mesh.rotation.set( 0, 0, 0 );
-				mesh.scale.set( 100, 100, 100 );
-				scene.add(mesh);
-			} );	
-			
-			loader.load( "room_desk.js", function ( geometry,materials,c ) { 
-				room_trash = geometry;
-				var mesh = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
-				mesh.position.set( 0, 0, 0 );
-				mesh.rotation.set( 0, 0, 0 );
-				mesh.scale.set( 100, 100, 100 );
-				scene.add(mesh);
-			} );
-			
-			loader.load( "room_trash.js", function ( geometry,materials,c ) { 
-				room_trash = geometry;
-				var mesh = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
-				mesh.position.set( 0, 0, 0 );
-				mesh.rotation.set( 0, 0, 0 );
-				mesh.scale.set( 100, 100, 100 );
-				scene.add(mesh);
-			} );	
-			
-			loader.load( "room_walls.js", function ( geometry,materials,c ) { 
-				room_trash = geometry;
-				var mesh = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+				var met = new THREE.MeshFaceMaterial(materials)
+				console.debug(met);
+				var mesh = new THREE.Mesh(geometry, met);
 				mesh.position.set( 0, 0, 0 );
 				mesh.rotation.set( 0, 0, 0 );
 				mesh.scale.set( 100, 100, 100 );
@@ -124,19 +99,6 @@
 			} );			
 		}
 		
-		var show = function(geometry){
-
-			var color = 0xffaa00;
-			var mets = [];
-			mets.push(new THREE.MeshLambertMaterial( { color: color,side:THREE.DoubleSide } ));
-			mets.push(new THREE.MeshBasicMaterial( { color: 0x000000, wireframe: true, transparent: true } ));
-			//var mesh = THREE.SceneUtils.createMultiMaterialObject( geometry ,mets);
-			var mesh = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
-			mesh.position.set( 0, 0, 0 );
-			mesh.rotation.set( 0, 0, 0 );
-			mesh.scale.set( 100, 100, 100 );
-			scene.add(mesh);
-		}
 		
 		
 
