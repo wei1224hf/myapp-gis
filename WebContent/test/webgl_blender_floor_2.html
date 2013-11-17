@@ -3,6 +3,7 @@
 
 	<body>
 <a href="#" onclick="addOtherFloor()">addOtherFloor</a>
+<a href="#" onclick="addRoof()">addRoof</a>
 <script type="text/javascript" src="../libs/three.min.js"></script>
 <script type="text/javascript" src="TrackballControls.js"></script>
 
@@ -26,7 +27,7 @@
 		var render_canvas = 1, render_gl = 1;
 		var has_gl = 0;
 
-		var thex = 50;
+		var thex = 150;
 		var they = 50;
 		
 		var geom_objects_rooms = null;
@@ -37,7 +38,7 @@
 			document.body.appendChild( container );
 
 			camera = new THREE.PerspectiveCamera( 75, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 100000 );
-			camera.position.z = 500;
+			camera.position.z = 2500;
 			camera.position.x = thex;
 			camera.position.y = they;
 
@@ -117,11 +118,30 @@
 			} );						
 		}	
 		
+		var addRoof = function(){
+			var loader = new THREE.JSONLoader();
+			loader.load( "floor_roof.js", function ( geometry,materials,c ) { 
+				var met = new THREE.MeshFaceMaterial(materials)
+				var mesh = new THREE.Mesh(geometry, met);
+				mesh.position.set( 0, 4*100*3.4, 0 );
+				mesh.rotation.set( 0, 0, 0 );
+				mesh.scale.set( 100, 100, 100 );
+				scene.add(mesh);									
+			} );						
+		}		
+		
 		var addOtherFloor = function(){
-			for(var i=1;i<3;i++){
-				var obj = geom_objects_rooms.clone();
-				console.debug(obj);
-				console.debug(geom_objects_rooms);
+			for(var i=1;i<5;i++){
+				var obj = new THREE.Object3D();
+				var obj_children = [];
+				for(var j=0;j<geom_objects_rooms.children.length;j++){
+					var mesh = geom_objects_rooms.children[j].clone();
+					obj_children.push( mesh );
+					obj.add(mesh);
+				} 
+				//console.debug(obj_children);
+				//obj.children = obj_children;
+
 				obj.position.set( 0,  i*100*3.4 ,0);
 				scene.add( obj );			
 			}
