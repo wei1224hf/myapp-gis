@@ -145,7 +145,31 @@
 				obj.position.set( 0,  i*100*3.4 ,0);
 				scene.add( obj );			
 			}
-		}		
+		}	
+		
+		var addGround = function(){
+			var geom = new THREE.Geometry();
+			geom.vertices.push(new THREE.Vector3( 0, -1, 0));
+			geom.vertices.push(new THREE.Vector3( -5000, -1, 0));
+			geom.vertices.push(new THREE.Vector3( 0, -1, 5000));
+
+			geom.faces.push(new THREE.Face3(0, 1, 2));
+
+			var met = new THREE.MeshBasicMaterial({  
+  				color: 0x000000, wireframe: true, wireframe_linewidth: 20
+			});
+
+			var met2 = new THREE.MeshBasicMaterial({
+  				color:0xCCCCCC
+  				,side:THREE.DoubleSide
+			});
+
+			var mesh1 = new THREE.Mesh(geom, met);
+			var mesh2 = new THREE.Mesh(geom, met2);
+
+			scene.add(mesh1);
+			scene.add(mesh2);
+		}	
 		
 
 		function animate(){
@@ -181,6 +205,7 @@
 
 		init();
 		addXYZlines();
+		addGround();
 		addFloor();
 		addFrontWindow();
 		addRoom();
