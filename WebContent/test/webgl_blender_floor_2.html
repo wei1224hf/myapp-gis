@@ -2,11 +2,7 @@
 <html lang="en">
 
 	<body>
-
-
-<a href="#" onclick="addFloor()">addFloor</a>
-<a href="#" onclick="addFrontWindow()">addFrontWindow</a>
-<a href="#" onclick="addRoom()">addRoom</a>
+<a href="#" onclick="addOtherFloor()">addOtherFloor</a>
 <script type="text/javascript" src="../libs/three.min.js"></script>
 <script type="text/javascript" src="TrackballControls.js"></script>
 
@@ -57,7 +53,6 @@
 			controls.dynamicDampingFactor = 0.3;
 
 			// LIGHTS
-
 			var ambient = new THREE.AmbientLight( 0x221100 );
 			scene.add( ambient );
 
@@ -78,8 +73,7 @@
 		var addRoom = function(){
 			var loader = new THREE.JSONLoader();
 			loader.load( "floor_room.js", function ( geometry,materials,c ) { 
-				room_trash = null;
-				
+				room_trash = null;				
 				for(var i=0;i<6;i++){					
 					room_trash = geometry;
 					var met = new THREE.MeshFaceMaterial(materials)
@@ -120,9 +114,7 @@
 				mesh.rotation.set( 0, 0, 0 );
 				mesh.scale.set( 100, 100, 100 );
 				geom_objects_rooms.add(mesh);									
-			} );	
-			
-						
+			} );						
 		}	
 		
 		var addOtherFloor = function(){
@@ -169,6 +161,9 @@
 
 		init();
 		addXYZlines();
+		addFloor();
+		addFrontWindow();
+		addRoom();
 		animate();
 
 		</script>
