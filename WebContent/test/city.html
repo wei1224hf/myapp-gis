@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<body>
+
+
+<a href="#" onclick="addCity()">addCity</a>
+<script type="text/javascript" src="../libs/three.min.js"></script>
+<script type="text/javascript" src="TrackballControls.js"></script>
+
+		<script>
+		var SCREEN_WIDTH = window.innerWidth;
+		var SCREEN_HEIGHT = window.innerHeight;
+		var FLOOR = 0;
+
+		var container,stats;
+
+		var camera, scene;
+		var canvasRenderer, webglRenderer;
+
+		var mesh, zmesh, geometry;
+
+		var mouseX = 0, mouseY = 0;
+
+		var windowHalfX = window.innerWidth / 2;
+		var windowHalfY = window.innerHeight / 2;
+
+		var render_canvas = 1, render_gl = 1;
+		var has_gl = 0;
+
+		var thex = 50;
+		var they = 50;
+		
+		var geom_objects_rooms = null;
+
+		function init() {
+
+			container = document.createElement( 'div' );
+			document.body.appendChild( container );
+
+			camera = new THREE.PerspectiveCamera( 75, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 100000 );
+			camera.position.z = 500;
+			camera.position.x = thex;
+			camera.position.y = they;
+
+			scene = new THREE.Scene();
+		
+			controls = new THREE.TrackballControls(camera);
+			controls.rotateSpeed = 5.0;
+			controls.zoomSpeed = 5;
+			controls.panSpeed = 2;
+			controls.noZoom = false;
+			controls.noPan = false;
+			controls.staticMoving = true;
+			controls.dynamicDampingFactor = 0.3;
+
+			// LIGHTS
+
+			var ambient = new THREE.AmbientLight( 0x221100 );
+			scene.add( ambient );
+
+			var directionalLight = new THREE.DirectionalLight( 0xffffff );
+			directionalLight.position.set( 0, 100, 100 ).normalize();
+			scene.add( directionalLight );
+			
+			webglRenderer = new THREE.WebGLRenderer();
+			webglRenderer.setSize( SCREEN_WIDTH*0.7, SCREEN_HEIGHT*0.7 );
+			webglRenderer.domElement.style.position = "relative";
+
+			container.appendChild( webglRenderer.domElement );
+			
+			geom_objects_rooms = new THREE.Object3D();
+			scene.add( geom_objects_rooms );			
+		}
+		
+		var addCity = function(){
+			var loader = new THREE.JSONLoader();
+			loader.load( "city.js", function ( geometry,materials,c ) { 
+
+				var met = new THREE.MeshFaceMaterial(materials)
+				var mesh = new THREE.Mesh(geometry, met);
+				mesh.position.set( 0, 0, 0 );
+				mesh.rotation.set( 0, 0, 0 );
+				mesh.scale.set( 10000, 10000, 10000 );
+				geom_objects_rooms.add(mesh);
+
+									
+			} );			
+		}	
+		
+
+		function animate(){
+			requestAnimationFrame( animate );
+			controls.update();
+			webglRenderer.render(scene, camera);
+		}
+		
+		var addXYZlines = function(){
+			var arrow_material = [
+		    	new THREE.LineBasicMaterial({ color: 0xff0000 }),
+		    	new THREE.LineBasicMaterial({ color: 0x00ff00 }),
+		    	new THREE.LineBasicMaterial({ color: 0x0000ff })
+		    ];
+		    var arrow_geometry = [
+		    	new THREE.Geometry(),
+		    	new THREE.Geometry(),
+		    	new THREE.Geometry()
+		    ];
+		    arrow_geometry[0].vertices = [new THREE.Vertex(new THREE.Vector3(0, 0, 0)), new THREE.Vertex(new THREE.Vector3(1500000, 0, 0))];
+		    arrow_geometry[1].vertices = [new THREE.Vertex(new THREE.Vector3(0, 0, 0)), new THREE.Vertex(new THREE.Vector3(0, 1500000, 0))];
+		    arrow_geometry[2].vertices = [new THREE.Vertex(new THREE.Vector3(0, 0, 0)), new THREE.Vertex(new THREE.Vector3(0, 0, 1500000))];
+
+		    var arrow_line = [
+		    	new THREE.Line(arrow_geometry[0], arrow_material[0]),
+		    	new THREE.Line(arrow_geometry[1], arrow_material[1]),
+		    	new THREE.Line(arrow_geometry[2], arrow_material[2])
+		    ];
+		    scene.add(arrow_line[0]);
+		    scene.add(arrow_line[1]);
+		    scene.add(arrow_line[2]);
+		}
+
+		init();
+		addXYZlines();
+		animate();
+
+		</script>
+	</body>
+</html>
